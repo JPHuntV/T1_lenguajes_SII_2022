@@ -108,7 +108,10 @@ fun especiesRanking(lista) = let
 fun especiesClase(lista) = let
     val _ = print "\nClase a filtrar: "
     val clase = elimNewlines(getLine())
-    val filtrados = List.filter(fn x => List.nth(x,1) = clase) lista
+    val filtrados = List.filter(fn x => 
+                                String.map(fn y => Char.toUpper(y)) (List.nth(x,1)) = 
+                                String.map(fn z => Char.toUpper(z)) clase
+                            ) lista
     val _ = printRes(filtrados)
     in
         filtrados
@@ -118,14 +121,21 @@ fun especiesClase(lista) = let
 fun especiesOrden(lista) = let
     val _ = print "\nOrden a filtrar: "
     val orden = elimNewlines(getLine())
-    val filtrados = List.filter(fn x => List.nth(x,2) = orden) lista
+    val filtrados = List.filter(fn x => 
+                                String.map(fn y => Char.toUpper(y)) (List.nth(x,2)) = 
+                                String.map(fn z => Char.toUpper(z)) orden
+                            ) lista
+    val _ = printRes(filtrados)                        
     in
         [[Int.toString(List.length(filtrados))]]
     end
 ;
 
 fun eliminarEspeciesRep [] = []
-  | eliminarEspeciesRep (x::xs) = x::eliminarEspeciesRep(List.filter (fn y => List.nth(y,3) <> List.nth(x,3)) xs)
+  | eliminarEspeciesRep (x::xs) = x::eliminarEspeciesRep(List.filter (fn y => 
+                                                                        String.map(fn y => Char.toUpper(y)) (List.nth(y,3)) <> 
+                                                                        String.map(fn z => Char.toUpper(z)) (List.nth(x,3))
+                                                                    ) xs)
   ;
 
 fun eliminarRep [] = []
