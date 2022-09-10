@@ -1,11 +1,46 @@
+(*
+Analizador.sml
+Tarea 1
+lenguajes de programación
+Jean Hunt
+2018265223
+*)
 
 
+
+(*getLine
+E:Ninguna
+S:Cadena de texto 
+R:ninguna
+O:Solicita al usuario una cadena de texto
+*)
 fun getLine () = Option.getOpt (TextIO.inputLine TextIO.stdIn, "");
 
+
+(*splitter
+E:sep -> caracter en donde se hara la división, s->cadena de texto a dividir
+S:Lista de cadenas de caracteres
+R:sep debe ser tipo char y s tipo string
+O:Recibe una cadena de texto s y la divivide en cada aparición de sep
+*)
 fun splitter sep s = String.tokens (fn c => c = sep) s;
 
+
+(*elimNewlines
+E:una cadena de caracteres  
+S:cadena de caracteres si salto de linea
+R:s debe ser tipo string
+O:Recibe una cadena de caracteres con salto de linea y elimina este salto
+*)
 fun elimNewlines s = String.translate (fn #"\n" => "" | c => String.str c) s;
 
+
+(*printRes
+E:lista de especimenes
+S:Imprime la lista
+R:La lista debe cumplir con la estructura esperada
+O: Recibe una lista de especimenes y la imprime en consola con formato de tabla
+*)
 fun printRes(lista) = let
     val _ = print "\nRANKING AVISTAMIENTOS |\t\tCLASE |\t\t\tORDEN |\t\t\t  ESPECIE |\t    ALTURA_LARGO |\t\t    PESO |\n\
                     \___________________________________________________________________________________________________________________________________________"
@@ -24,13 +59,23 @@ fun printRes(lista) = let
 ;
 
 
-
-
+(*listOf
+E:un string x
+S:string dividido en cada ,
+R:Debe recibir un valor de tipo string
+O:Recibe un string y forma una lista donde cada elemnto es un substring dividido en ,
+*)
 fun listOf(nil) = nil
 |   listOf(x::xs) =  String.tokens (fn c => c = #",") x::listOf(xs)
 ;
 
 
+(*abrirArchivo
+E:ruta del archivo a abrir
+S:lista de cada linea del archivo
+R:el archivo indicado debe de existir
+O:Solicita un archivo al usuario y devuelve una lista de elementos en donde cada uno es una linea del archivo
+*)
 fun abrirArchivo () = let 
     val infile =  elimNewlines(getLine())
     val ins = TextIO.openIn infile 
@@ -44,17 +89,25 @@ fun abrirArchivo () = let
 ;
 
 
-(*(**)Elimina el elemento k de una lista*)
+(*delete_ith
+E:una lista x y el indice del elemento a eliminar
+S:la lista x sin el elemento indicado 
+R:El indice debe ser valido
+O: Recibe una lista y un indice, elimina el elemento en dicha posición
+*)
 fun delete_ith ([], k) = []
   | delete_ith (x::xs, 1) = xs
   | delete_ith (x::xs, k) = x :: delete_ith (xs, k - 1)
 ;
 
 
-
-
-
-
+(*topAscendenteRango
+E:lista de especimenes, valor inicial y final del rango 
+S:Imprime en consola la lista calculada
+R:Los indices deben ser valido de acuerdo a la lista
+O: Recibe una lista, solicita al usuario una posición de inicio y final e imprime el indice ordenado ascendentemente dentro 
+    del rango indicado
+*)
 fun topAscendenteRango(lista) = let
     fun solicitarInicio () = let
         val _ = print "\nInicio: "
@@ -82,6 +135,12 @@ fun topAscendenteRango(lista) = let
 ;
 
 
+(*detallesAltura
+E:lista  de especimenes y altura a superar
+S:Imprime en consola la lista calculada
+R:El valor ingresado en altura debe ser numerico
+O:Filtra todos los especimenes mayores a la altura/largo indicado y los imprime en una tabla
+*)
 fun detallesAltura(lista) = let
     val _ = print "\nAltura a filtrar: "
     val altura = valOf(Real.fromString(elimNewlines(getLine())))
@@ -94,6 +153,13 @@ fun detallesAltura(lista) = let
     end
 ;
 
+
+(*especiesRanking
+E:lista de especimenes y posición del ranking
+S:Imprime en consola la lista calculada
+R:El valor rank debe ser entero
+O: Filtra el indice e imprime en una tabla los especimenes en el ranking indicado
+*)
 fun especiesRanking(lista) = let
     val _ = print "\nPosicion del ranking: "
     val posicion = valOf(Int.fromString(elimNewlines(getLine())))
@@ -105,6 +171,13 @@ fun especiesRanking(lista) = let
 ;
 
 
+
+(*especiesClase
+E:lista de especimenes y clase a filtrar
+S:Imprime en consola la lista calculada
+R:ninguna
+O: Solicita al usuario una clase e imprime una tabla con todos los especimenes que pertenezcan a ella
+*)
 fun especiesClase(lista) = let
     val _ = print "\nClase a filtrar: "
     val clase = elimNewlines(getLine())
@@ -118,6 +191,13 @@ fun especiesClase(lista) = let
     end
 ;
 
+
+(*especiesOrden
+E:lista de especimenes y orden a filtrar
+S:Imprime en consola la lista calculada
+R:ninguna
+O: Solicita al usuario un orden e imprime una tabla con todos los especimenes que pertenezcan a el
+*)
 fun especiesOrden(lista) = let
     val _ = print "\nOrden a filtrar: "
     val orden = elimNewlines(getLine())
@@ -131,6 +211,13 @@ fun especiesOrden(lista) = let
     end
 ;
 
+
+(*eliminarEspeciesRep
+E:lista x
+S:lista sin valores repetidos segun el indice 3
+R:La lista debe poseer un largo de 4 minimo
+O:Recibe una lista de especies y elimina todas aquellas repeticiones segun especie
+*)
 fun eliminarEspeciesRep [] = []
   | eliminarEspeciesRep (x::xs) = x::eliminarEspeciesRep(List.filter (fn y => 
                                                                         String.map(fn y => Char.toUpper(y)) (List.nth(y,3)) <> 
@@ -138,10 +225,24 @@ fun eliminarEspeciesRep [] = []
                                                                     ) xs)
   ;
 
+
+(*eliminarRep
+E:lista x
+S:lista sin elementos repetidos
+R:ninguna
+O: Elimina los elementos repetidos de una lista
+*)
 fun eliminarRep [] = []
   | eliminarRep (x::xs) = x::eliminarRep(List.filter (fn y => y <> x) xs)
 ;
 
+
+(*resumen
+E:lista de especimenes
+S:impresión del resumen en consola
+R:recibir una lista de especimenes
+O: Imprime en consola un resumen de la información contenida en el archivo con el indice
+*)
 fun resumen (lista)= let
     val cantEspecies = eliminarEspeciesRep(lista)
     val especieTamanioNombre = ListMergeSort.sort (fn(x,y)=> String.size(List.nth(x,3)) <
@@ -182,6 +283,13 @@ fun resumen (lista)= let
     end
 ;
 
+
+(*imprimirMenu
+E:lista de especimenes
+S:llamada a la función escogida
+R:Se debe elegir una opción valida
+O: Despliega un menu al usuario para que este elija que operación llevar a cabo
+*)
 fun imprimirMenu (lista) = let
     val menu = print "\n\n\n1.Mostrar top ascendente por rango\n\
                         \2.Mostrar detalles animales por altura\n\
@@ -212,8 +320,13 @@ fun imprimirMenu (lista) = let
 ;
 
 
-fun main () = 
-let
+(*main
+E:ninguna
+S:ejecución del programa
+R:ninguna
+O:Solicita la dirección del archivo e inicia el programa
+*)
+fun main () = let
     val _ = print"Ingrese la ruta del archivo: \t"
     val lista = delete_ith (abrirArchivo(), 1)
     val lista2= listOf(lista)
